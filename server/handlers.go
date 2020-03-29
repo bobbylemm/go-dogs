@@ -2,10 +2,11 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"go-dogs/config"
+	"go-dogs/services"
 	"net/http"
-	"go-dogs/db"
 )
 
 func HandleGetHome() http.HandlerFunc {
@@ -16,9 +17,15 @@ func HandleGetHome() http.HandlerFunc {
 
 func HandleGetAllDogs(config config.Config) http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		db, err := db.ConnectToDB( context.Background())
+		db, err := services.ConnectToDB(context.Background(), config)
 		if err != nil {
 			http.Error(writer, "could not connect to DB", http.StatusInternalServerError)
 		}
+		dogs, err := db.GetAllDogs()
+		if err != nil {
+			http.Error(writer, "could not fetch all the dogs", http.StatusInternalServerError)
+		}
+		writer.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(writer).Encode(dogs)
 	}
 }
