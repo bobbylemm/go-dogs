@@ -1,20 +1,28 @@
 package db
 
 import (
-	"io/ioutil"
-	"log"
-	"net/http"
+	"context"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func AllDogs() {
-	resp, err := http.Get("https://thedogapi.com/v1/images?api_key=ce9eb0c2-8a22-4c06-8e59-898617a08303")
-	if err != null {
-		log.Fatalln(err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	log.Println(string(body))
+type DB struct {
+	*mongo.Database
 }
+
+func ConnectToDB(ctx context.Context) (*DB, error) {
+	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	client, err := mongo.NewClient(clientOptions)
+	if err != nil {
+		return nil, err
+	}
+	err = client.Connect(ctx)
+	if err != nil {
+		return nil, err
+	}
+	dogsDB := client.Database("dogs")
+
+	return &DB{dogsDB}, nil
+}
+
+
