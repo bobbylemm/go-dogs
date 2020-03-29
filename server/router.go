@@ -12,6 +12,7 @@ type Router struct {
 
 func (r Router) initializeRoutes() {
 	r.HandleFunc("/", HandleGetHome())
+	r.HandleFunc("/dogs", HandleGetAllDogs(r.AppConfig))
 }
 
 func NewRouter(appConfig config.Config) *Router {
