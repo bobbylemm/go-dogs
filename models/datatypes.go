@@ -1,7 +1,5 @@
 package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
-
 type Dog struct {
 	Name string `json:"name"`
 	Breed string `json:"breed"`
@@ -25,4 +23,12 @@ type Breed []struct {
 	Temperament string `json:"temperament"`
 	Origin      string `json:"origin"`
 	CountryCode string `json:"country_code,omitempty"`
+}
+
+func (Dog) CollectionName() string {
+	return "Dog"
+}
+
+func (Breed) CollectionName() string {
+	return "Breed"
 }
