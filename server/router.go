@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/gorilla/mux"
 	"go-dogs/config"
+	"net/http"
 )
 
 type Router struct {
@@ -10,9 +11,10 @@ type Router struct {
 	AppConfig config.Config
 }
 
-func (r Router) initializeRoutes() {
+func (r *Router) initializeRoutes() {
 	r.HandleFunc("/", HandleGetHome())
-	r.HandleFunc("/dogs", HandleGetAllDogs(r.AppConfig))
+	r.HandleFunc("/dogs", HandleGetAllDogs(r.AppConfig)).Methods(http.MethodGet)
+	r.HandleFunc("/dogs", HandleAddDog(r.AppConfig)).Methods(http.MethodPost)
 }
 
 func NewRouter(appConfig config.Config) *Router {

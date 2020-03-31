@@ -8,7 +8,7 @@ import (
 
 type Config struct {
 	AppPort string
-	DbUrl string
+	DBUrl string
 }
 
 func GetConfig() *Config {
@@ -18,6 +18,6 @@ func GetConfig() *Config {
 	}
 	return &Config{
 		AppPort: os.Getenv("APP_PORT"),
-		DbUrl:   os.Getenv("DB_URL"),
+		DBUrl:   os.Getenv("DB_URL"),
 	}
 }

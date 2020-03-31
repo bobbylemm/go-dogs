@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"go-dogs/config"
@@ -17,15 +16,30 @@ func HandleGetHome() http.HandlerFunc {
 
 func HandleGetAllDogs(config config.Config) http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		db, err := services.ConnectToDB(context.Background(), config)
+		db, err := services.ConnectToDB(request.Context(), config)
 		if err != nil {
 			http.Error(writer, "could not connect to DB", http.StatusInternalServerError)
 		}
-		dogs, err := db.GetAllDogs()
+		dogs, err := db.GetAllDogs(request)
 		if err != nil {
 			http.Error(writer, "could not fetch all the dogs", http.StatusInternalServerError)
 		}
 		writer.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(writer).Encode(dogs)
+	}
+}
+
+func HandleAddDog(config config.Config) http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		db, err := services.ConnectToDB(request.Context(), config)
+		if err != nil {
+			http.Error(writer, "could not connect to DB", http.StatusInternalServerError)
+		}
+		result, err := db.AddDog(request)
+		if err != nil {
+			http.Error(writer, "could not add new record", http.StatusInternalServerError)
+		}
+		writer.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(writer).Encode(result)
 	}
 }

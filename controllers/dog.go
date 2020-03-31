@@ -1,10 +1,8 @@
 package controllers
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-	"go-dogs/config"
 	"go-dogs/models"
 	"io/ioutil"
 	"log"
@@ -37,7 +35,7 @@ func AllBreeds(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	data := models.Breed{}
+	var data []models.Breed
 
 	err = json.Unmarshal(body, &data)
 	if err != nil {
@@ -63,17 +61,5 @@ func SearchBreed(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	respondWithJson(w, http.StatusOK, data)
-}
-
-func AddDog(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-	var dogs models.Dog
-	if err := json.NewDecoder(r.Body).Decode(&dogs); err != nil {
-		respondWithError(w, http.StatusBadRequest, "invalid request payload")
-	}
-	db := config.DbConnect().Database("dogsDb")
-	collection := db.Collection("dogs")
-	collection.InsertOne(context.Background(), dogs)
 	respondWithJson(w, http.StatusOK, data)
 }

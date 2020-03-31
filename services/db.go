@@ -12,7 +12,7 @@ type DB struct {
 }
 
 func ConnectToDB(ctx context.Context, config config.Config) (*DB, error) {
-	clientOptions := options.Client().ApplyURI(config.DbUrl)
+	clientOptions := options.Client().ApplyURI(config.DBUrl)
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		return nil, err
