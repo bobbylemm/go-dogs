@@ -30,7 +30,7 @@ func (d *DB) AddDog(r *http.Request) (*mongo.InsertOneResult, error) {
 	if err := json.NewDecoder(r.Body).Decode(&dog); err != nil {
 		return nil, err
 	}
-	response, err := d.Collection("dogs").InsertOne(r.Context(), dog);
+	response, err := d.Collection("dogs").InsertOne(r.Context(), dog)
 	if err != nil {
 		return nil, err
 	}
