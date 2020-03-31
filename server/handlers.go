@@ -43,3 +43,18 @@ func HandleAddDog(config config.Config) http.HandlerFunc {
 		_ = json.NewEncoder(writer).Encode(result)
 	}
 }
+
+func HandleGetAllBreeds(config config.Config) http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		db, err := services.ConnectToDB(request.Context(), config)
+		if err != nil {
+			http.Error(writer, "could not connect to DB", http.StatusInternalServerError)
+		}
+		result, err := db.AllBreeds()
+		if err != nil {
+			http.Error(writer, "could not get all breeds", http.StatusInternalServerError)
+		}
+		writer.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(writer).Encode(result)
+	}
+}

@@ -15,6 +15,7 @@ func (r *Router) initializeRoutes() {
 	r.HandleFunc("/", HandleGetHome())
 	r.HandleFunc("/dogs", HandleGetAllDogs(r.AppConfig)).Methods(http.MethodGet)
 	r.HandleFunc("/dogs", HandleAddDog(r.AppConfig)).Methods(http.MethodPost)
+	r.HandleFunc("/breeds", HandleGetAllBreeds(r.AppConfig)).Methods(http.MethodGet)
 }
 
 func NewRouter(appConfig config.Config) *Router {
