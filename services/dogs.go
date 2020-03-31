@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 func (d *DB) GetAllDogs(r *http.Request) ([]models.Dog, error) {
@@ -27,7 +28,7 @@ func (d *DB) GetAllDogs(r *http.Request) ([]models.Dog, error) {
 }
 
 func (d *DB) AllBreeds(r *http.Request) ([]models.Breed,error) {
-	resp, err := http.Get("https://api.thedogapi.com/v1/breeds")
+	resp, err := http.Get(os.Getenv("DOGS_API"))
 	if err != nil {
 		log.Fatalln(err)
 	}
